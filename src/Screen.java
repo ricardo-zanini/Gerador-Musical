@@ -26,7 +26,7 @@ public class Screen extends JFrame{
         try {
             setIconImage(ImageIO.read(screenIcon));
         } catch (Exception e) {
-            System.out.println(e);
+            UserAlert userAlert = new UserAlert("ERRO - Erro ao carregar imagem!"); 
         }
     }
 

@@ -112,6 +112,7 @@ public class FileSelector extends JPanel{
                     UserAlert userAlert = new UserAlert("ERRO - Erro na abertura de Arquivo!");
                 }
             }else{
+                // Imprime no field relacionado ao seletor o caminho do arquivo selecionado
                 fieldFile.setText(windowFile.getSelectedFile().getPath());
             }
         }
