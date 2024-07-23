@@ -1,14 +1,9 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.jfugue.player.Player;
-import org.jfugue.pattern.Pattern;
-
-import java.io.*;
 import java.util.*;
 
 public class HomeScreen extends Screen{
@@ -19,9 +14,8 @@ public class HomeScreen extends Screen{
     private JLabel labelFileSave;
     private JLabel labelTitle;
     private FileSelector fileSelector;
-    private FileSelector fileSave;
+    private FileSaver fileSave;
     private JButton buttonCreateMusic;
-    private JButton buttonSaveMusic;
 
     public HomeScreen(){
         super("Tela Inicial");
@@ -41,10 +35,9 @@ public class HomeScreen extends Screen{
         setLabelFileSelector(new JLabel("- Escolha um Arquivo -"));   
         setLabelFileSave(new JLabel("- Salvar em MIDI -"));       
         setLabelTitle(new JLabel("- Gerador Musical -"));          
-        setFileSelector(new FileSelector(505, textArea));        
-        setFileSave(new FileSelector(425));            
-        setButtonCreateMusic(new JButton("Reproduzir"));   
-        setButtonSaveMusic(new JButton("Salvar"));     
+        setFileSelector(new FileSelector(505, textArea, new FileNameExtensionFilter("Arquivos de Texto", "txt")));        
+        setFileSave(new FileSaver(425, textArea.getText(), new FileNameExtensionFilter("Arquivos de Música", "midi")));            
+        setButtonCreateMusic(new JButton("Reproduzir"));
     }
 
     private void configComponents(){
@@ -76,12 +69,6 @@ public class HomeScreen extends Screen{
 
         fileSave.setBounds(10, 320, 565, 40);
 
-        buttonSaveMusic.setBounds(495, 320, 80, 40);
-        buttonSaveMusic.setBackground(new Color(216, 225, 240));
-        buttonSaveMusic.setFont(new Font(null, Font.BOLD, 12));
-        buttonSaveMusic.setBorder(new LineBorder(new Color(216, 225, 240),0));
-        buttonSaveMusic.addActionListener(event -> eventFileSave(event));
-
         //---------------------------------------------------------
 
         buttonCreateMusic.setBounds(180, 380, 200, 50);
@@ -101,44 +88,10 @@ public class HomeScreen extends Screen{
         add(labelFileSelector);     // Label do seletor
         add(fileSelector);          // Seletor de Arquivos
 
-        add(buttonSaveMusic);       // Botão para salvamento do arquivo
         add(labelFileSave);         // Botão de Reprodução
         add(fileSave);              // Campo de escolha de arquivo para salvamento
 
         add(buttonCreateMusic);     // Botão de Reprodução
-    }
-
-    private void eventFileSave(ActionEvent e){
-        String filePath = fileSave.getFieldFile().getText();
-
-        if(filePath.length() == 0){
-            UserAlert userAlert = new UserAlert("Você não selecionou um destino!");
-        }else{
-            try {
-                File fileSaveCreate = new File(filePath);
-                System.out.println(getExtension(filePath));
-
-                if(getExtension(filePath).equals(Optional.of("midi"))){
-                    if (fileSaveCreate.createNewFile()) {
-                        try {
-                            Player player = new Player();
-                            Pattern pattern = new Pattern(fileSave.getFileContent());
-
-                            player.saveMidi(pattern, filePath);
-                            UserAlert userAlert = new UserAlert("Arquivo Salvo com sucesso"); 
-                          } catch (IOException ex) {
-                            UserAlert userAlert = new UserAlert("ERRO - Erro ao criar arquivo"); 
-                          }
-                    } else {
-                        UserAlert userAlert = new UserAlert("O arquivo selecionado já existe!"); 
-                    }
-                }else{
-                    UserAlert userAlert = new UserAlert("O arquivo deve ser do tipo MIDI"); 
-                }
-              } catch (IOException ex) {
-                UserAlert userAlert = new UserAlert("ERRO - Erro ao criar arquivo"); 
-              }
-        }
     }
 
     private void eventPlayMusic(){
@@ -146,13 +99,6 @@ public class HomeScreen extends Screen{
             PlayScreen playScreen = new PlayScreen(textArea.getText());
         }
     }
-
-    // !!! DEVE SER MUDADA PARA CLASSE A PARTE 
-    private Optional<String> getExtension(String filename) {
-        return Optional.ofNullable(filename)
-          .filter(f -> f.contains("."))
-          .map(f -> f.substring(filename.lastIndexOf(".") + 1));
-        }
 
     public TextArea getTextArea() {
         return textArea;
@@ -210,10 +156,10 @@ public class HomeScreen extends Screen{
     }
 
 
-    public FileSelector getFileSave() {
+    public FileSaver getFileSave() {
         return fileSave;
     }
-    public void setFileSave(FileSelector fileSave) {
+    public void setFileSave(FileSaver fileSave) {
         this.fileSave = fileSave;
     }
 
@@ -223,14 +169,6 @@ public class HomeScreen extends Screen{
     }
     public void setButtonCreateMusic(JButton buttonCreateMusic) {
         this.buttonCreateMusic = buttonCreateMusic;
-    }
-    
-
-    public JButton getButtonSaveMusic() {
-        return buttonSaveMusic;
-    }
-    public void setButtonSaveMusic(JButton buttonSaveMusic) {
-        this.buttonSaveMusic = buttonSaveMusic;
     }
 
     

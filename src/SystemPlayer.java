@@ -8,14 +8,10 @@ public class SystemPlayer extends Player{
     public SystemPlayer(String musicText){
   
         setMusicNotes(musicText);
-        play(this.musicNotes);
 
-        // Rhythm rhythm = new Rhythm()
-        // .addLayer("OoOoOOOOOO..oO...O..oOO..")
-        // .addLayer("......S...S...S.")
-        // .addLayer("````````````````")
-        // .addLayer("...............+++++");
-        // new Player().play(rhythm.getPattern().repeat(2));
+         // !!!!!!!!!!!!!! TRABALAR NESSA PARTE !!!!!!!!!!!!!!
+
+        play(this.musicNotes);
 
     }
     public String getMusicNotes() {

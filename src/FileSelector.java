@@ -12,25 +12,42 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FileSelector extends JPanel{
 
-    private JButton buttonFile;
-    private JTextField fieldFile;
-    private JFileChooser windowFile;
-    private String fileContent;
-    private File file;
+    private JButton         buttonFile;
+    private JTextField      fieldFile;
+    private JFileChooser    windowFile;
+    private String          fileContent;
+    private File            file;
 
-    public FileSelector(int textFieldWidth, TextArea textArea){
-        initializeFileSelector(textFieldWidth);
+    // Campo com tamanho, campo textarea q recebe conteudo do arquvo, e filtro
+    public FileSelector(int textFieldWidth, TextArea textArea, FileNameExtensionFilter filter){
+        initializeFileSelector(textFieldWidth, filter);
 
         buttonFile.addActionListener(event -> selectFile(event, textArea));
     }
 
-    public FileSelector(int textFieldWidth){
-        initializeFileSelector(textFieldWidth);
+    // Campo com tamanho e filtro
+    public FileSelector(int textFieldWidth, FileNameExtensionFilter filter){
+        initializeFileSelector(textFieldWidth, filter);
 
         buttonFile.addActionListener(event -> selectFile(event, null));
     }
 
-    private void initializeFileSelector (int textFieldWidth){
+    // Campo com tamanho, campo textarea q recebe conteudo do arquvo
+    public FileSelector(int textFieldWidth, TextArea textArea){
+        initializeFileSelector(textFieldWidth, null);
+
+        buttonFile.addActionListener(event -> selectFile(event, textArea));
+    }
+
+    // Campo com tamanho
+    public FileSelector(int textFieldWidth){
+        initializeFileSelector(textFieldWidth, null);
+
+        buttonFile.addActionListener(event -> selectFile(event, null));
+    }
+
+
+    private void initializeFileSelector (int textFieldWidth, FileNameExtensionFilter filter){
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         ImageIcon imageIcon = new ImageIcon("img/fileIcon.png"); // load the image to a imageIcon
@@ -58,8 +75,10 @@ public class FileSelector extends JPanel{
         windowFile.setVisible(false);
         
         windowFile.setAcceptAllFileFilterUsed(false);
-        //FileNameExtensionFilter filter = new FileNameExtensionFilter("Interface Musical", "midi");
-        // windowFile.addChoosableFileFilter(filter);
+        
+        if(filter != null){
+            windowFile.addChoosableFileFilter(filter);
+        }
         
         add(buttonFile,  BorderLayout.WEST);
         add(fieldFile,  BorderLayout.EAST);
@@ -72,10 +91,11 @@ public class FileSelector extends JPanel{
         int windowState = windowFile.showSaveDialog(null);
 
         if (windowState == JFileChooser.APPROVE_OPTION){
+            
             // Só executa essa parte se for passado o textArea de destino como parâmetro
             if(textArea != null){
                 List<String> fileLines = new ArrayList<String>();
-                
+                setFile(windowFile.getSelectedFile());
                 try (BufferedReader br = new BufferedReader(new FileReader(windowFile.getSelectedFile()))) {
                     fieldFile.setText(windowFile.getSelectedFile().getPath());
                     String line;
@@ -87,8 +107,6 @@ public class FileSelector extends JPanel{
                         setFileContent(getFileContent() + fileLines.get(i)) ;
                     }
                     textArea.setText(getFileContent());
-
-                    
 
                 } catch (IOException exception) {
                     UserAlert userAlert = new UserAlert("ERRO - Erro na abertura de Arquivo!");
