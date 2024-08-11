@@ -1,7 +1,10 @@
+package Screen;
 import java.awt.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import Alert.UserAlert;
 
 
 public class Screen extends JFrame{

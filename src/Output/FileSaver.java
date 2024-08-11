@@ -1,3 +1,4 @@
+package Output;
 import java.awt.*;
 
 import javax.swing.JButton;
@@ -11,7 +12,10 @@ import javax.sound.midi.Sequence;
 
 import org.jfugue.player.Player;
 import org.staccato.StaccatoParser;
-import org.jfugue.midi.MidiFileManager;
+
+import Alert.UserAlert;
+import Input.FileSelector;
+
 import org.jfugue.pattern.Pattern;
 
 import java.io.*;
@@ -22,19 +26,23 @@ import java.util.logging.Filter;
 public class FileSaver extends FileSelector{
 
     private JButton buttonSaveMusic;
+    private Sequence fileContentSequence;
 
-    public FileSaver(int textFieldWidth, String fileContent){
+    public FileSaver(int textFieldWidth, Sequence content){
         super(textFieldWidth);
 
-        setFileContent(fileContent);
+        setFileContentSequence(content);
 
         createComponents();
-        configComponents();
+        configComponents(new FileNameExtensionFilter(".midi", ".midi"));
         addComponents();
     }
 
-    public FileSaver(int textFieldWidth, String fileContent, FileNameExtensionFilter filter){
+    public FileSaver(int textFieldWidth, Sequence content, FileNameExtensionFilter filter){
         super(textFieldWidth, filter);
+
+        setFileContentSequence(content);
+
         createComponents();
         configComponents(filter);
         addComponents();
@@ -71,7 +79,7 @@ public class FileSaver extends FileSelector{
                         try {
 
                             Player player = new Player();
-                            MidiFileManager.save(geradorArquivoMidi(), fileSaveCreate);
+                            MidiFileManager.save(getFileContentSequence(), fileSaveCreate);
 
                             UserAlert userAlert = new UserAlert("Arquivo Salvo com sucesso"); 
                           } catch (IOException ex) {
@@ -91,14 +99,12 @@ public class FileSaver extends FileSelector{
         }
     }
 
-    private Sequence geradorArquivoMidi(){
-        
-         // !!!!!!!!!!!!!! TRABALAR NESSA PARTE !!!!!!!!!!!!!!
-         // Aqui é preciso fazer uma outra função, que pegará o conteúdo do textArea
-         // converterá para os padrões solicitados pelo professor, e jogara em um midi corretamente configurado
-         // O conteudo do arquivo/textArea esta em getFileContent();
-        
-        return null;
+    public Sequence getFileContentSequence() {
+        return this.fileContentSequence;
+    }
+
+    public void setFileContentSequence(Sequence content) {
+        this.fileContentSequence = content;
     }
 
     private Optional<String> getExtension(String filename) {

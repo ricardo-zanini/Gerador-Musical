@@ -1,3 +1,4 @@
+package Alert;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class UserAlert{

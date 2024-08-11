@@ -1,16 +1,15 @@
+package Music;
+
 import java.util.Arrays;
 
-import org.jfugue.player.Player;
-import org.jfugue.rhythm.Rhythm;
+import javax.sound.midi.Sequence;
 
-import Music.Instrument;
-import Music.Octave;
-import Music.Tempo;
-import Music.Volume;
+import org.jfugue.midi.MidiParserListener;
+import org.staccato.StaccatoParser;
 
-public class SystemPlayer extends Player{
-    
-    private String musicNotes;
+public class MusicNotes {
+
+    private Sequence musicSequence;
     private Instrument instrument = new Instrument();
     private Volume volume = new Volume();
     private Octave octave = new Octave();
@@ -19,17 +18,9 @@ public class SystemPlayer extends Player{
     private static final String NOTES[] = {"A","a","B","b","C","c","D","d","E","e","F","f","G","g"};
     private static final String OTHER_VOWELS[] = {"I","i","O","o","U","u"};
     private static final String PAUSE_DEFINITION = "R";
-    
-    public SystemPlayer(String musicText){
-  
-        setMusicNotes(musicText);
 
-        play(this.musicNotes);
-
-    }
-
-    public String getMusicNotes() {
-        return musicNotes;
+    public Sequence getMusicNotes() {
+        return this.musicSequence;
     }
 
     //gera uma nota aleatoria
@@ -158,8 +149,16 @@ public class SystemPlayer extends Player{
 
         }
 
+        //mostra no terminal o midi gerado
         System.out.println(newMusicNotes);
-        this.musicNotes = newMusicNotes;
+
+        //converte o texto midi para uma sequencia midi
+        StaccatoParser staccatoParser = new StaccatoParser();
+        MidiParserListener midiParserListener= new MidiParserListener();
+        staccatoParser.addParserListener(midiParserListener);
+        staccatoParser.parse(newMusicNotes);
+
+        this.musicSequence = midiParserListener.getSequence();
     }
-    
+
 }

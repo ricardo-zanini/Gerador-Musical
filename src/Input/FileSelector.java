@@ -1,3 +1,4 @@
+package Input;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,8 @@ import java.util.Optional;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import Alert.UserAlert;
 
 public class FileSelector extends JPanel{
 
@@ -88,7 +91,7 @@ public class FileSelector extends JPanel{
     private void selectFile(ActionEvent e, TextArea textArea){
 
         windowFile.setVisible(true);
-        int windowState = windowFile.showSaveDialog(null);
+        int windowState = windowFile.showOpenDialog(null);
 
         if (windowState == JFileChooser.APPROVE_OPTION){
             
